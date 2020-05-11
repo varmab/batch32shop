@@ -34,13 +34,49 @@ class Shop extends Component{
     }
 
     addToCart=(item)=>{
-        console.log(JSON.stringify(item))
-        this.setState({
-            cartItems:[
-                ...this.state.cartItems,
-                item
-            ]
+        console.log(JSON.stringify(item));
+
+        let isItemExist=this.state.cartItems.some((cartItem)=>{
+            return cartItem.id==item.id;
         })
+
+        if(isItemExist==false){
+            //New Item
+            item.qty=1;
+            this.setState({
+                cartItems:[
+                    ...this.state.cartItems,
+                    item
+                ],
+                orderTotal:this.state.cartItems.reduce((total,cartItem)=>{
+                    return total+cartItem.price * cartItem.qty;
+                },0)+item.price*item.qty
+            })
+        }
+        else
+        {
+            //Existing Item
+            var existingItem=this.state.cartItems.find((cartItem)=>{
+                return cartItem.id==item.id;
+            })
+
+            existingItem.qty=existingItem.qty+1;
+
+            this.setState({
+                cartItems:[
+                    ...this.state.cartItems.filter((cartItem)=>{
+                        return cartItem.id!=item.id
+                    }),
+                    existingItem
+                ]
+            },()=>{
+                this.setState({
+                    orderTotal:this.state.cartItems.reduce((total,cartItem)=>{
+                        return total+cartItem.price * cartItem.qty;
+                    },0)
+                })
+            })
+        }
     }
 
     removeFromCart=(item)=>{
@@ -49,6 +85,12 @@ class Shop extends Component{
         this.setState({
             cartItems:this.state.cartItems.filter((currentItem)=>{
                 return currentItem.id!=item.id;
+            })
+        },()=>{
+            this.setState({
+                orderTotal:this.state.cartItems.reduce((total,cartItem)=>{
+                    return total+cartItem.price * cartItem.qty;
+                },0)
             })
         })
     }

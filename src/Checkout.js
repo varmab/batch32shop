@@ -9,6 +9,12 @@ class Checkout extends Component{
         }
     }
 
+    componentWillReceiveProps(newProps){
+        this.setState({
+            orderTotal:newProps.orderTotal
+        })
+    }
+
     render(){
         return (
             <React.Fragment>

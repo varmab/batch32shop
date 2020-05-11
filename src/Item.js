@@ -25,6 +25,11 @@ class Item extends Component{
                 <p>Price: {this.state.item.price}</p>
                 {
                     (this.state.isCart==true) ? 
+                    (<p>Qty:{this.state.item.qty}</p>) :
+                    ("")
+                }
+                {
+                    (this.state.isCart==true) ? 
                     (<button onClick={this.remove}>Remove</button>) :
                     (<button onClick={this.add}>Add to cart</button>)
                 }
